@@ -1,0 +1,76 @@
+{% extends "team-view.html" %}
+
+{% block righttab %}
+
+<link rel="stylesheet" href="/static/css/chat.css">
+<script src="/static/js/chat.js"></script>
+
+<script>
+    $(document).ready(function(){
+
+        $('.tabs p').removeClass('active');
+        $('.chat-tab').addClass('active');
+
+        $.ajax({
+            type: "GET",
+            url: '/messages/team/{{ team.tcode }}/',
+            success: function (data) {
+                $.each(data, function(key, value){
+                    addMessage(value, '{{ current_user.username }}');
+                });
+            }
+        });
+
+        var url = 'ws://' + document.domain;
+        if(location.port != '')
+            url = 'ws://' + document.domain + ':' + location.port;
+
+        // Socket connection
+        var socket = io.connect(url, { transports: ["websocket"] });
+        socket.emit('join_team_channel', {'room': '{{ team.tcode }}'});
+
+        socket.on('general', function(message) {
+            // console.log(message);
+        });
+
+        // Function to send message
+        function sendMessage(){
+            if($('#message-field').val() != '')
+                socket.emit('team_message', {'message': $('#message-field').val(), 'room': '{{ team.tcode }}'});
+            $('#message-field').val('');
+        }
+
+        // Event listeners for send message button
+        $('#send-message').click(function(e){
+            e.preventDefault();
+            sendMessage();    
+        });
+
+        $("#message-field").on('keyup', function (e) {
+            if (e.keyCode === 13) {
+                sendMessage();
+            }
+        });
+
+        // Recieve message
+        socket.on('team_message', function(data){
+            addMessage(data, '{{ current_user.username }}');
+        });
+
+        scrollToBottom();
+
+    });
+</script>
+
+<div class="chat-wrapper">
+    <div class="chat-body">
+        <div class="chat-messages"></div>
+    </div>
+    <div class="chat-footer">
+        <div class="message-sender">
+            <input type="text" placeholder="Type your message" id="message-field"><button id="send-message"></button>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

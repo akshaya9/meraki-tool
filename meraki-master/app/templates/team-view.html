@@ -1,0 +1,106 @@
+{% extends "dash.html" %}
+
+{% block dashright %}
+<link rel="stylesheet" href="/static/css/team-view.css">
+<script>
+    $(document).ready(function() {
+        document.title = '{{ team.tname }} | Meraki';
+        $('.dash-side div').removeClass('active');
+        $('.dash-side-item.teams').addClass('active');
+
+        $('.add-member').click(function(){
+            $('#page-mask').css('display', 'block');
+            var url = "/team/add/{{ team.tcode }}/";
+            $.ajax({
+                type: "GET",
+                url: url,
+                success: function (data) {
+                    $('.pop-up').html(data);      
+                }
+            });
+            $('.pop-up').css('height', '550px');
+            $('.pop-up').css('display', 'block');
+        });
+
+        $('.delete-team').click(function(){
+            $('#page-mask').css('display', 'block');
+            var url = "/team/delete/{{ team.tcode }}/";
+            $.ajax({
+                type: "GET",
+                url: url,
+                success: function (data) {
+                    $('.pop-up').html(data);      
+                }
+            });
+            $('.pop-up').css('display', 'block');
+        });
+
+        $('.leave-team').click(function(){
+            $('#page-mask').css('display', 'block');
+            $('.pop-up').css('width', '560px');
+            $('.pop-up').css('height', '250px');
+            html = '<div class="leave-team" style="padding: 60px; text-align: justify;"><h2>Are you sure?</h2><p style="margin-top: 15px; margin-bottom: 15px;">Are you sure you want to leave the team {{ team.tname }} ?</p><form action="/team/leave/{{team.tcode}}/" method="POST"><input type="submit" class="confirm-remove" value="Confirm"><input type="submit" style="margin-left: 10px" class="cancel-leave" value="Cancel"></form></div>'
+            $('.pop-up').html(html);
+            $('.cancel-leave').click(function(e){
+                e.preventDefault();
+                $('.pop-up').css('display', 'none');
+                $('.pop-up').html('');
+                $('.pop-up').css('width', '650px');
+                $('.pop-up').css('height', '300px');
+                $('#page-mask').css('display', 'none'); 
+            });
+            $('.pop-up').css('display', 'block');
+        });
+    });
+</script>
+<div class="pop-up" style="width: 650px"></div>
+<div class="team-details">
+    <div class="team-details-left">
+        <div>
+            <a href="/dashboard/">
+            <div class="back-to-dash">
+                <img src="/static/images/icons/back.png" height="10px">
+                <p>All teams</p>
+            </div>
+            </a>
+            <center>
+                {% set name = team.tname.split(' ') %}
+                <img src="/static/images/teams/{% if name|length > 1 %}{{name[0][0]|upper}}{{name[1][0]|upper}}{% else %}{{name[0][0]|upper}}{% endif %}.png" height="100px"><br><br>
+                <span class="team-name">{{ team.tname }}</span>
+            </center>
+            <div style="margin-top: 20px">
+                <p>{{ team.tdesc }}</p>
+            </div>
+            <div style="margin-top: 20px;">
+                <center>
+                    {% if team.tadmin != current_user.username %}
+                    <input type="submit" value="Leave team" class="leave-team">
+                    {% else %}
+                    <input type="submit" class ="add-member" value="Add Member" style="width: 120px; margin-right: 10px;">
+                    <input type="submit" class ="delete-team" value="Delete Team" style="width: 120px">
+                    {% endif %}
+                </center>
+            </div>
+        </div>
+    </div>
+    <div class="team-details-right">
+        <div class="team-channel-head">
+            <div>
+                <img src="/static/images/teams/{% if name|length > 1 %}{{name[0][0]|upper}}{{name[1][0]|upper}}{% else %}{{name[0][0]|upper}}{% endif %}.png" height="30px">
+            </div>
+            <div>
+                <h3>{{ team.tname }} </h3>
+            </div>
+            <div class="tabs" style="margin-left: 10px;">
+                <a href="/team/{{ team.tcode }}/chat/"><div><p class="chat-tab">Chat</p></div></a>
+                <a href="/team/{{ team.tcode }}/tasks/"><div><p class="tasks-tab">Tasks</p></div></a>
+                <a href="/team/{{ team.tcode }}/members/"><div><p class="members-tab">Members</p></div></a>
+            </div>
+        </div>
+        <div class="team-channel-body">
+            {% block righttab %}{% endblock %}
+        </div>
+    </div>
+</div>
+
+{% endblock %}

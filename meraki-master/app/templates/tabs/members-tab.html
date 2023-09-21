@@ -1,0 +1,129 @@
+{% extends "team-view.html" %}
+
+{% block righttab %}
+
+<script>
+    $(document).ready(function(){
+        $('.tabs p').removeClass('active');
+        $('.members-tab').addClass('active');
+        
+        $('.close-flash').click(function(){
+            $(this).parent().remove();
+        });
+
+        $('.member-close').click(function(){
+            var d = $(this).parent().attr('id');
+            $('#page-mask').css('display', 'block');
+            $('.pop-up').css('width', '560px');
+            $('.pop-up').css('height', '250px');
+            html = `<div class="delete-team"style="padding: 60px; text-align: justify;"><h2>Are you sure?</h2><p style="margin-top: 15px; margin-bottom: 15px;">Are you sure you want to remove <b>@ ${d}</b> from the team?</p><form action="/team/remove?team={{ team.tcode }}&user=${d}" method="POST"><input type="submit" class="confirm-remove" value="Confirm"><input type="submit" style="margin-left: 10px" class="cancel-remove" value="Cancel"></form></div>`;
+            $('.pop-up').html(html);
+            $('.cancel-remove').click(function(e){
+                e.preventDefault();
+                $('.pop-up').css('display', 'none');
+                $('.pop-up').html('');
+                $('.pop-up').css('width', '650px');
+                $('.pop-up').css('height', '300px');
+                $('#page-mask').css('display', 'none'); 
+            });
+            $('.pop-up').css('display', 'block');
+        });
+
+
+    });
+</script>
+<style>
+    .members-tab-wrapper{
+        padding: 30px;
+        width: 100%;
+    }
+
+    .member{
+        display: grid;
+        width: 500px;
+        height: 70px;
+        grid-template-columns: 60px auto 60px;
+        grid-template-areas: 'img details close';
+    }
+    .member:hover{
+        background: #e3e3e3;
+    }
+    .member-close{
+        grid-area: close;
+    }
+    .member-close img{
+        height: 15px;
+    }
+    .member-close:hover{
+        cursor: pointer;
+    }
+    .member-img{
+        grid-area: img;
+    }
+    .member-img img{
+        height: 40px;
+    }
+    .member-details{
+        grid-area: details;
+    }
+    .member-details{
+        display: flex;
+        align-items: center;
+    }
+    .member-close, .member-img{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    .member-details span{
+        font-weight: normal;
+    }
+    .member-details .admin-highlight{
+        padding: 1px 10px;
+        font-size: 13px;
+        color: #fff;
+        background: #32a852;
+    }
+    .flash-notifications{
+        margin-top: 0;
+        margin-bottom: 10px;
+    }
+</style>
+<div class="members-tab-wrapper">
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+        {% for message in messages %}
+        <div class="flash-notifications">
+            <div class="flash-message">
+                {{ message|safe }}
+            </div>
+            <div class="close-flash">  
+                <img src="/static/images/icons/close.png">
+            </div>
+        </div>
+        {% endfor %}
+        {% endif %}
+    {% endwith %}
+    <div class="list-members">
+        {% for m in members %}
+        <div class="member" id="{{ m.User.username }}">
+            {% if team.tadmin == current_user.username and m.User.username != team.tadmin %}
+            <div class="member-close">
+                <img src="/static/images/icons/close.png">
+            </div>
+            {% endif %}
+            <div class="member-img">
+                <img src="/static/images/icons/user.png">
+            </div>
+            <div class="member-details">
+                <div>
+                    <h3>{{ m.User.name}} <span> (@{{ m.User.username }})</span> {% if team.tadmin == m.User.username %}<span class="admin-highlight">Admin</span>{% endif %}</h3>
+                    <p>{{ m.User.email }}</p>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+{% endblock %}

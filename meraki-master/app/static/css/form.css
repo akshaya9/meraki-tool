@@ -1,0 +1,105 @@
+.st-form-container{
+    height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.st-form{
+    width: 100%;
+    max-width: 500px;
+}
+
+.st-form-container a{
+    color: #000;
+    text-decoration: none;
+}
+
+.st-form-container a .link{
+    border-bottom: 2px solid #000;
+}
+
+.st-form p{
+    margin-top: 15px;
+    margin-bottom: 15px;
+}
+
+:focus {outline:none;}
+::-moz-focus-inner {border:0;}
+
+
+button,
+input[type="text"], 
+input[type="email"], 
+input[type="password"],
+textarea {
+    /* width: 350px; */
+    width: 100%;
+    height: 50px;
+    border: none;
+    padding: 5px;
+    font-size: 18px;
+}
+
+textarea{
+    height: 100px;
+    resize: none;
+    font-family: "Helvetica Neue", Helvetica, sans-serif;
+}
+
+button, input[type="submit"], input[type="button"]{
+    border: 2px solid #000;
+    background: #000;
+    color: #fff;
+    width: 150px;
+    height: 40px;
+    transition: 0.2s;
+    cursor: pointer;
+}
+
+button:hover:disabled, input[type="submit"]:disabled, input[type="button"]:disabled{
+    border: grey;
+    background: grey;
+}
+
+button:hover:enabled, input[type="submit"]:hover:enabled, input[type="button"]:hover:enabled{
+    color: #000;
+    background: #fff;
+}
+
+.st-form-field{
+    height: 60px;
+    border: 2px solid #000;
+    display: flex;
+    align-items: center;
+    margin-bottom: 5px;
+    margin-top: 15px;
+    color: 	#D3D3D3;
+}
+
+.textarea{
+    height: 110px;
+}
+
+.st-form-errors{
+    display: none;
+    margin-bottom: 20px;
+    color: #FF0800;
+}
+
+/*
+::-webkit-input-placeholder {
+    font-family: 'Source Sans Pro', sans-serif;
+}
+::-moz-placeholder {
+    font-family: 'Source Sans Pro', sans-serif;
+}
+:-ms-input-placeholder {
+    font-family: 'Source Sans Pro', sans-serif;
+}
+:-moz-placeholder {
+    font-family: 'Source Sans Pro', sans-serif;
+}
+*/

@@ -1,0 +1,87 @@
+.dash-right{
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+}
+.team-details{
+    height: 100%;
+    width: 100%;
+    display: grid;
+    grid-template-columns: 370px auto;
+    grid-template-areas: "lt rt";
+} 
+
+.team-details-left{
+    padding: 15px;
+}
+
+.team-details-left{
+    grid-area: lt;
+    text-align: justify;
+    background: #fff;
+}
+
+.team-details-right{
+    grid-area: rt;
+    overflow: hidden;
+    display: grid;
+    grid-template-rows: 60px auto;
+    grid-template-areas:
+    'head'
+    'body';
+    background: #f3f2f1;
+}
+
+.team-channel-head{
+    grid-area: head;
+    padding-left: 20px;
+    display: flex;
+    align-items: center;
+    border-bottom: .1rem solid rgba(37,36,35,.05);
+}
+
+.team-channel-head div, .team-channel-head a{
+    height: 100%;
+    display: flex;
+    align-items: center;
+}
+
+.team-channel-head div{
+    padding-right: 10px;
+    padding-left: 10px;
+}
+
+.team-channel-head div p{
+    width: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    padding-right: 5px;
+    padding-left: 5px;
+    border-bottom: 2px solid transparent;
+}
+
+.team-channel-head div p:hover, .team-channel-head div p.active{
+    cursor: pointer;
+    border-bottom: 2px solid black;
+}
+
+.team-channel-body{
+    height: 100%;
+    width: 100%;
+    grid-area: body;
+    overflow-y: scroll;
+}
+
+.back-to-dash{
+    margin-bottom: 20px;
+}
+
+.back-to-dash:hover{
+    color: #505050;
+}
+
+.back-to-dash p{
+    display: inline-block;
+}

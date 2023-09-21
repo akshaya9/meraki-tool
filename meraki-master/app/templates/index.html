@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block content %}
+<link rel="stylesheet" href="/static/css/index.css">
+<div class="home-container">
+    <div class="home-left">
+        <img src="/static/images/home_page.jpg" height="650px">
+    </div>
+    <div class="home-right">
+        <div>
+            <h1>Welcome to <span style="font-family: Catamaran">Meraki</span></h1>
+            <br>
+            <p>This is a collaborative team work tool that helps you and your team to communicate and work together seamlessly. It is designed to support the way people naturally work together. You can collaborate with people online as efficiently as you do face-to-face, using a smart device. </p>
+            <br>
+            <p>Get started. Do something with soul, creativity and love.</p>
+            <br>
+            <a href="/register/"><input type="submit" value="Register"></submit></a>
+            <p style="margin-top: 10px;">Already have an account? <a href="/login/"><span class="link">Sign in</span></a></p>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

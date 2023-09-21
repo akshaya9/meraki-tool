@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<script>
+    $(document).ready(function() {
+        $('form').submit(function (e) {
+            $(".st-form-errors span").html('');
+            $(".st-form-errors").css('display', 'none');
+
+            var url = "{{ url_for('login') }}";
+            $.ajax({
+                type: "POST",
+                url: url,
+                data: $('form').serialize(),
+                success: function (data) {
+                    // console.log(data);
+                    if(data.data['status'] == 200)
+                        window.location = '/dashboard/';
+                    else if(data.data.hasOwnProperty('error')){
+                        $(".st-form-errors span").html(data.data['error']);
+                        $(".st-form-errors").css('display', 'block');
+                    }
+                }
+            });
+            e.preventDefault();
+        });
+
+        $.ajaxSetup({
+            beforeSend: function(xhr, settings) {
+                if (!/^(GET|HEAD|OPTIONS|TRACE)$/i.test(settings.type) && !this.crossDomain) {
+                    xhr.setRequestHeader("X-CSRFToken", "{{ form.csrf_token._value() }}")
+                }
+            }
+        })
+    });
+</script>
+
+<div class="st-form-container">
+
+    <div class="st-form">
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+            {% for message in messages %}
+            <div class="flash-notifications" style="margin-bottom: 10px;">
+                <div class="flash-message">
+                    {{ message }}
+                </div>
+            </div>
+            {% endfor %}
+            {% endif %}
+        {% endwith %}
+        <h1>Sign In</h1>
+        <p>Please sign in to your account to continue</p>
+        <form action="" method="post" novalidate autocomplete="off">
+            {{ form.hidden_tag() }}
+            <div class="st-form-field">
+                {{ form.username }}
+            </div>
+            <div class="st-form-field">
+                {{ form.password }}
+            </div>
+            <div class="st-form-errors">
+                <span>ERROR</span>
+            </div>
+            <p>{{ form.submit }}</p>
+            <p>Don't have an account ? <a href="/register/"><span class="link">Register</span></a></p>
+        </form>
+    
+    </div>
+
+</div>
+
+{% endblock %}

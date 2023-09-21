@@ -1,0 +1,103 @@
+{% extends "dash.html" %}
+
+{% block dashright %}
+
+<script>
+    $(document).ready(function(){
+        $('.close-flash').click(function(){
+            $(this).parent().parent().remove();
+        });
+        
+        $('.dash-side div').removeClass('active');
+        $('.dash-side-item.teams').addClass('active');
+
+        $('.join-team').click(function(){
+            $('#page-mask').css('display', 'block');
+            var url = "/team/join/";
+            $.ajax({
+                type: "GET",
+                url: url,
+                success: function (data) {
+                    $('.pop-up').html(data);      
+                }
+            });
+            $('.pop-up').css('display', 'block');
+        });
+
+        $('.create-team').click(function(){
+            $('.pop-up').css('height', '450');
+            $('#page-mask').css('display', 'block');
+            var url = "/team/create/";
+            $.ajax({
+                type: "GET",
+                url: url,
+                success: function (data) {
+                    $('.pop-up').html(data);      
+                }
+            });
+            $('.pop-up').css('display', 'block');
+        });
+
+    });
+</script>
+<style>
+    .team-dash-wrapper{
+        height: 100%;
+        width: 100%;
+        overflow-y: auto;
+    }
+    .team-dash-content{
+        width: 100%;
+        /* height: 100%; */
+    }
+    .join-team, .create-team{
+        height: 33px !important;
+    }
+</style>
+<div class="pop-up" style="width: 600px" heigh="350px;"></div>
+<div class="team-dash-wrapper">
+    <div class="team-dash-content">
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+            {% for message in messages %}
+            <div style="padding: 25px;">
+            <div class="flash-notifications" style="margin-bottom: 10px;">
+                <div class="flash-message">
+                    {{ message|safe }}
+                </div>
+                <div class="close-flash">  
+                    <img src="/static/images/icons/close.png">
+                </div>
+            </div>
+            </div>
+            {% endfor %}
+            {% endif %}
+        {% endwith %}
+        <div class="team-head">
+            <div class="team-head-left">
+                <h3>Teams</h3>
+            </div>
+            <div class="team-head-right">
+                <input type="submit" value="Join team" class="join-team" style="margin-right: 15px;">
+                <input type="submit" value="Create team" class="create-team">
+            </div>
+        </div>
+        <div class="teams-view">
+            {% if teams %}
+                {% for item in teams %}
+                    <a href="/team/{{ item.Team.tcode }}/"">
+                        <div class="team-card">
+                            <div class="team-card-img">
+                                {% set name = item.Team.tname.split(' ') %}
+                                <img src="/static/images/teams/{% if name|length > 1 %}{{name[0][0]|upper}}{{name[1][0]|upper}}{% else %}{{name[0][0]|upper}}{% endif %}.png" height="70px" style="margin-bottom: 10px;">
+                            </div>
+                            <span class="team-name"><center>{{ item.Team.tname }}</center></span>
+                        </div>
+                    </a>  
+                {% endfor %}
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+{% endblock %}
